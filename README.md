@@ -35,6 +35,7 @@ Where `-DCONFIG_A_MODE=1` enables the new perceptual encoding recipe, and `-j16`
 
 3. Prepare the example sequence for encoding with our libaom-POE to YUV format:
 ```bash
+mkdir sequences
 wget https://media.xiph.org/video/aomctc/test_set/a2_2k/OldTownCross_1920x1080p50.y4m -O ./sequences/OldTownCross_1920x1080p50.y4m
 
 ffmpeg -i ./sequences/OldTownCross_1920x1080p50.y4m ./sequences/OldTownCross_1920x1080p50.yuv
@@ -57,14 +58,18 @@ python predict_DL_raw.py --dist_path ../sequences/OldTownCross_1920x1080p50.mp4 
 
 cd ..
 ```
+The script `predict_DL_raw.py` requires to have FFprobe from FFmpeg installed in the system. Path to FFprobe can be set in the script under the variable `FFPROBE`.
 
 
 
 5. Run the modified libaom encoder using a pre-computed lambda correction map and a YUV sequence:
 
 ```bash
+mkdir logs
+
 ./aom/build-POE/aomenc -o ./encodes/OldTownCross_1920x1080p50_tune_llvq_57_0_inter.obu --verbose --psnr --lag-in-frames=16 --test-decode=fatal --obu --passes=1 --cpu-used=0 --i420 --width=1920 --height=1080 --fps=50/1 --input-bit-depth=8 --bit-depth=8 --end-usage=q --cq-level=57 --limit=65 --tile-columns=0 --threads=4 --use-fixed-qp-offsets=1 --deltaq-mode=0 --enable-tpl-model=0 --kf-min-dist=65 --enable-keyframe-filtering=0 --min-gf-interval=16 --max-gf-interval=16 --auto-alt-ref=1 --gf-min-pyr-height=4 --gf-max-pyr-height=4 --kf-max-dist=65 --tune=ssim --dump-folder=./external_data_for_encode/OldTownCross/dl2_rawlin21/ ./sequences/OldTownCross_1920x1080p50.yuv 2>&1 | tee ./logs/encoded_sequence-log.txt
 ```
+where `--dump-folder` specifies the path to the lambda correction map.
 
 ## References
 
