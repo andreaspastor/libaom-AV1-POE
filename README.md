@@ -44,11 +44,22 @@ ffmpeg -i ./sequences/OldTownCross_1920x1080p50.y4m -c:v libx264 -crf 0 -pix_fmt
 converting the sequence "OldTownCross_1920x1080p50.y4m" to YUV format for encoding with our libaom-POE and put in a mp4 container for the lambda correction map prediction.
 
 4. Generate the lambda correction map for the sequence:
+
+The Python tested version is 3.11.2. To install the required packages, create a virtual environment and install the packages using the following commands:
 ```bash
 python3 -m venv myenv
 source myenv/bin/activate
 python -m pip install opencv-python torch tqdm
+```
 
+or alternatively, use the `requirements.txt` file to install the required packages:
+
+```bash
+python -m pip install -r requirements.txt
+```
+Now, you can run the lambda correction map prediction using the following commands:
+
+```bash
 mkdir encodes
 mkdir external_data_for_encode
 
